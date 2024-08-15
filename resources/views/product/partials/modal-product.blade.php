@@ -51,14 +51,14 @@
                                                         <input name="price" class="block w-full px-4 py-3 mb-3 leading-tight text-gray-700 bg-gray-200 border border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-gray-500" type="integer">
                                                     </div>
                                                 </div>
-                                                {{-- <div class="flex flex-wrap mb-6 -mx-3">
+                                                <div class="flex flex-wrap mb-6 -mx-3">
                                                     <div class="w-full px-3">
                                                         <label class="block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase" for="grid-password">
                                                             Gambar
                                                         </label>
                                                         <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="user_avatar_help" id="user_avatar" type="file">
                                                     </div>
-                                                </div> --}}
+                                                </div>
                                             </div>
                                             <!-- Modal footer -->
                                             <div class="flex justify-end p-4 border-t border-gray-200 rounded-b md:p-5 dark:border-gray-600">

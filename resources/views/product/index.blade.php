@@ -5,28 +5,8 @@
         </h2>
     </x-slot>
     <div class="py-2">
-        @if (count($errors) > 0)
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
-        @if ($message = Session::get('error'))
-        <div class="alert alert-warning">
-            <p>{{ $message }}</p>
-        </div>
-        @endif
-        @if ($message = Session::get('success'))
-            <div class="alert alert-success">
-                <p>{{ $message }}</p>
-            </div>
-        @endif
+        @include('components.validation-error-notifications')
+        @include('components.succes-error-notification')
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
@@ -36,9 +16,15 @@
                         </div>
                         <div>Search</div>
                     </div>
-                    <div class="overflow-auto h-[100%] relative shadow-md sm:rounded-lg">
-                        @include('product.partials.table-product')
+                        @if ($produk->count() == 0)
+                            <p class="text-center">Tidak ada data</p>
+                        @else
+                        <div class="overflow-auto h-[100%] relative shadow-md sm:rounded-lg">
+                            @include('product.partials.table-product')
+                        @endif
+
                     </div>
+                    {{ $produk->links() }}
                 </div>
             </div>
         </div>

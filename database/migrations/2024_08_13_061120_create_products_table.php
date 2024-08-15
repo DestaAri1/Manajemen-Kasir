@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('stock');
             $table->float('price');
             $table->string('image')->nullable();
-            $table->integer('user_id');
+            $table->unsignedBigInteger('user_id');
             $table->timestamps();
         });
     }
