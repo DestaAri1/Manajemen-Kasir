@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -33,11 +34,11 @@ class ProductController extends Controller
 
     public function index()
     {
-        $produk = Product::paginate(6);
+        $produk = Product::where('user_id', Auth::user()->id)->paginate(6);
         return view('product.index', compact('produk'));
     }
 
-    public function addStock(Request $request, $id)
+    public function updateStock(Request $request, $id)
     {
         //
     }

@@ -23,4 +23,8 @@ class Product extends Model
     public function user() {
         return $this->belongsTo(User::class, 'users');
     }
+
+    public function productsPromo() {
+        return $this->hasMany(Promo::class, 'promos');
+    }
 }

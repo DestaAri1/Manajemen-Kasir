@@ -8,7 +8,6 @@ window.Alpine = Alpine;
 
 Alpine.start();
 
-
 // Fungsi untuk menyembunyikan pop-up
 function hideSuccessPopup() {
     document.getElementById('successPopup').classList.add('hidden');
