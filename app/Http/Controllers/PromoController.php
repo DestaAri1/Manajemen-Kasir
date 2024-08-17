@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Product_promo;
 use App\Models\Promo;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
 
 class PromoController extends Controller
@@ -33,7 +35,10 @@ class PromoController extends Controller
 
     public function index()
     {
-        $promo = Promo::where('user_id', Auth::user()->id)->paginate(6);
+        $promo = Promo::where('user_id', Auth::user()->id)->with([
+            'productPromos',
+        ])->paginate(6);
+        // dd($promo);
         return view('promo.index', compact('promo'));
     }
 
@@ -89,7 +94,6 @@ class PromoController extends Controller
         } else {
             return redirect()->route('promo')->with('success', 'Promo berhasil dibuat');
         }
-
     }
 
     public function show(Promo $promo)
@@ -97,9 +101,18 @@ class PromoController extends Controller
         //
     }
 
-    public function edit(Promo $promo)
+    public function edit($id)
     {
-        //
+        try {
+            $decryptedId = Crypt::decryptString($id);
+            $promo = Promo::where('user_id', Auth::user()->id)->with([
+                'productPromos',
+            ])->findOrFail($decryptedId);
+            $produk = Product::where('user_id', Auth::user()->id)->get();
+            return view('promo.edit', compact('promo', 'produk'));
+        } catch (DecryptException $e) {
+            return view('errors.404');
+        }
     }
 
     public function update(Request $request, Promo $promo)
@@ -107,8 +120,18 @@ class PromoController extends Controller
         //
     }
 
-    public function destroy(Promo $promo)
+    public function destroy($id)
     {
-        //
+        try {
+            $decryptedId = Crypt::decryptString($id);
+            $promo = Promo::findOrFail($decryptedId);
+            if ($promo->delete()) {
+                return redirect()->back()->with('success', 'Promo Berhasil Dihapus');
+            } else {
+                return redirect()->back()->with('error', 'Promo Gagal Dihapus');
+            }
+        } catch (DecryptException $e) {
+            return view('errors.404');
+        }
     }
 }

@@ -34,8 +34,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/create', [PromoController::class, 'create'])->name('promo.create');
         Route::post('/', [PromoController::class, 'store'])->name('promo.post');
         Route::get('/{id}', [PromoController::class, 'edit'])->name('promo.edit');
-        Route::patch('/id}', [PromoController::class, 'update'])->name('promo.updated');
-        Route::delete('/id}', [PromoController::class, 'destroy'])->name('promo.delete');
+        Route::patch('/{id}', [PromoController::class, 'update'])->name('promo.updated');
+        Route::delete('/{id}', [PromoController::class, 'destroy'])->name('promo.delete');
     });
 });
 

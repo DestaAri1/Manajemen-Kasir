@@ -44,8 +44,4 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-
-    public function products() {
-        return $this->hasMany(Product::class, 'products'); // 1 user bisa memiliki banyak produk
-    }
 }
