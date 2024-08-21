@@ -43,7 +43,7 @@ class PromoController extends Controller
     {
         $promo = Promo::where('user_id', Auth::user()->id)->with([
             'productPromos',
-        ])->paginate(6);
+        ])->get();
         // dd($promo);
         return view('promo.index', compact('promo'));
     }
