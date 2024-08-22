@@ -6,3 +6,15 @@
     font-weight: bold;
     color: #007bff;
 }
+
+/* CSS untuk menghilangkan spinner pada input number */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
