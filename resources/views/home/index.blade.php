@@ -5,6 +5,8 @@
         </h2>
     </x-slot>
     <div class="py-2">
+        @include('components.validation-error-notifications')
+        @include('components.succes-error-notification')
         <div class="max-w-7xl flex mx-auto sm:px-6 lg:px-8">
             <!-- Scrollable div -->
             <div id="my-scrollable-div" class="bg-white md:overflow-y-auto md:overflow-x-hidden shadow-sm sm:rounded-lg w-full md:w-[74.5%] md:max-h-[75vh] opacity-0">

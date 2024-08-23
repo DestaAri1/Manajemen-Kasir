@@ -13,12 +13,12 @@
                 </div>
             </div>
         </div>
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6">
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             @foreach ($produk as $p)
             <div class="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-lg overflow-hidden border border-gray-200">
                 <a href="javascript:;" class="group">
                     <div class="relative">
-                        <img src="https://pagedone.io/asset/uploads/1700726158.png" alt="Produk Image" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105">
+                        <img src="{{ $p->image != null ? $p->image : asset('image_not_found.jpg') }}" alt="Produk Image" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105">
                         <div class="absolute bottom-0 left-0 bg-gradient-to-t from-black to-transparent w-full p-4">
                             <h6 class="text-white text-xs leading-4">
                                 {{ Str::limit($p->products, 35, ' ...') }}
@@ -27,16 +27,18 @@
                     </div>
                     <div class="p-4">
                         <h6 class="font-semibold text-sm text-gray-600">Stok: {{ $p->stock }}</h6>
-                        <h6 class="font-semibold text-lg text-indigo-600 mt-1">$100</h6>
+                        <h6 class="font-semibold text-lg text-indigo-600 mt-1">Rp. {{ formatRupiah($p->price) }}</h6>
                     </div>
                 </a>
                 <div class="pb-4">
-                    <form class="flex justify-center items-center">
+                    <form action="{{ route('add_cart') }}" method="POST" class="flex justify-center items-center">
+                        @csrf
                         <!-- Minus Button -->
                         <button type="button" class="bg-red-500 text-white px-2 py-1 rounded-l hover:bg-red-600 transition-colors duration-200 minusButton" data-id="{{ $p->id }}">-</button>
 
                         <!-- Input -->
-                        <input type="number" id="numberInput{{ $p->id }}" class="w-14 text-center border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none appearance-none py-1" value="0" />
+                        <input type="hidden" name="product_id" value="{{ $p->id }}">
+                        <input type="number" name="quantity" id="numberInput{{ $p->id }}" class="number w-14 text-center border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none appearance-none py-1" value="0" />
 
                         <!-- Plus Button -->
                         <button type="button" class="bg-green-500 text-white px-2 py-1 rounded-r hover:bg-green-600 transition-colors duration-200 plusButton" data-id="{{ $p->id }}">+</button>

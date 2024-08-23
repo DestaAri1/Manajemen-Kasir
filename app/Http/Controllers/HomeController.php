@@ -19,19 +19,24 @@ class HomeController extends Controller
             'productPromos',
         ])->get();
         $produk = Product::where('user_id', Auth::user()->id)->get();
-        // $cart = Cart::where('user_id', Auth::user()->id)->get();
+        $cart = Cart::where('user_id', Auth::user()->id)
+                ->with(['product'])
+                ->get();
         if (session()->has('scrollPosition')) {
-            return view('home.index', ['scrollPosition' => session()->get('scrollPosition'), 'promo', 'produk   ']);
+            return view('home.index', ['scrollPosition' => session()->get('scrollPosition'), 'promo', 'produk', 'cart']);
         }
-        return view('home.index', compact('promo', 'produk'));
+        return view('home.index', compact('promo', 'produk', 'cart'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function search(Request $request)
     {
-        //
+        $searchInput = $request->input('searchInput');
+        $products = Product::where('products', 'LIKE', "%{$searchInput}%")->get();
+
+        return response()->json($products);
     }
 
     /**

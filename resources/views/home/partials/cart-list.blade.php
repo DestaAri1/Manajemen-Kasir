@@ -1,11 +1,47 @@
-<div>
-    <p class="font-semibold">{{strtoupper('Kerangjang Belanja')}}</p>
-    <form action="#" method="post">
-        <div class="overflow-y-auto max-h-[57vh]">
-            //
-        </div>
-        <div>
-            <button class="w-full bg-blue-600 text-white rounded-md mt-2">Submit</button>
-        </div>
-    </form>
+<div class="p-4">
+    <p class="font-semibold text-lg text-gray-800">{{ strtoupper('Kerangjang Belanja') }}</p>
+    @if ($cart->count() == 0)
+        <p class="text-center text-gray-500">Tidak ada data</p>
+    @else
+        <form action="#" method="post">
+            <div class="overflow-y-auto overflow-x-hidden max-h-[57vh] border border-gray-300 rounded-md px-4">
+                <table class="min-w-full table-auto">
+                    <tbody>
+                        @foreach ($cart as $c)
+                        <tr class="border-b border-gray-200">
+                            <!-- Image column -->
+                            <td class="py-2 pr-4">
+                                <img src="{{ $c->product->image != null ? $c->product->image : asset('image_not_found.jpg') }}" alt="{{ $c->product->products }}" class="w-16 h-16 object-cover rounded">
+                            </td>
+                            <!-- Product and Quantity column -->
+                            <td class="py-2 text-gray-700">
+                                <p class="font-medium">{{ $c->product->products }}</p>
+                                <div class="mt-1">
+                                    <input type="number" id="quantity-{{ $c->id }}" name="quantity[{{ $c->id }}]" value="{{ $c->quantity }}" class="w-16 px-2 py-1 border border-gray-300 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                </div>
+                            </td>
+                            <!-- Delete button column -->
+                            <td class="py-2 text-right">
+                                <button class="text-red-500 hover:text-red-700" type="button" onclick="removeFromCart({{ $c->id }})">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <!-- Submit button -->
+            <div class="mt-4">
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-md py-2">Submit</button>
+            </div>
+        </form>
+    @endif
 </div>
+
+<script>
+    function removeFromCart(id) {
+        // Add your remove logic here (AJAX request or form submission)
+        alert('Produk dengan ID ' + id + ' akan dihapus.');
+    }
+</script>

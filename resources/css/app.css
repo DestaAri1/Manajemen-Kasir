@@ -8,13 +8,13 @@
 }
 
 /* CSS untuk menghilangkan spinner pada input number */
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
+input[type="number"].number::-webkit-outer-spin-button,
+input[type="number"].number::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
 
-input[type="number"] {
+input[type="number"].number {
     -moz-appearance: textfield;
     appearance: textfield;
 }

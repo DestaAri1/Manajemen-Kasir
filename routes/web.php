@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
@@ -15,10 +16,13 @@ Route::fallback(function () {
     return view('errors.404');
 });
 
-Route::get('/dashboard', [HomeController::class, 'index']
-)->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/search', [ProductController::class, 'search'])->name('search');
 
 Route::middleware('auth')->group(function () {
+    Route::prefix('/home')->group(function () {
+        Route::get('/', [HomeController::class, 'index'])->name('dashboard');
+        // Route::get('/search', [HomeController::class, 'search'])->name('search');
+    });
     Route::prefix('/product')->group(function () {
         Route::get('/', [ProductController::class, 'index'])->name('product');
         Route::post('/', [ProductController::class, 'store'])->name('product.post');
@@ -38,6 +42,11 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{id}', [PromoController::class, 'destroy'])->name('promo.delete');
         Route::get('/delete_product/{id}', [PromoController::class, 'deleteProduct'])->name('promo.productDelete');
         Route::delete('/delete_product/{id}', [PromoController::class, 'destroyProduct'])->name('promo.productDelete.destroy');
+    });
+
+    Route::prefix('/cart')->group(function () {
+        Route::post('/', [CartController::class, 'store'])->name('add_cart');
+        Route::delete('/{id}', [CartController::class, 'destroy'])->name('delete_cart');
     });
 });
 

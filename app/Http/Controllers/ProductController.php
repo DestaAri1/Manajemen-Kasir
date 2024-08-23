@@ -13,7 +13,7 @@ class ProductController extends Controller
 {
     private $rules = [
         'product' => 'required|string|max:255',
-        'stock' => 'required|integer|not_in:0|',
+        'stock' => 'required|integer|not_in:0',
         'price' => 'required|regex:/^\d+(\.\d{1,2})?$/|not_in:0',
         'image' => 'mimes: jpeg, jpg, png', 'max:2048',
     ];
