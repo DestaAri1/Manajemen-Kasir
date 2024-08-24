@@ -33,7 +33,7 @@ class HomeController extends Controller
      */
     public function search(Request $request)
     {
-        $searchInput = $request->input('searchInput');
+        $searchInput = $request->input('query');
         $products = Product::where('products', 'LIKE', "%{$searchInput}%")->get();
 
         return response()->json($products);

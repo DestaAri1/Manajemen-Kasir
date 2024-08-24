@@ -8,25 +8,25 @@
                 <table class="min-w-full table-auto">
                     <tbody>
                         @foreach ($cart as $c)
-                        <tr class="border-b border-gray-200">
-                            <!-- Image column -->
-                            <td class="py-2 pr-4">
-                                <img src="{{ $c->product->image != null ? $c->product->image : asset('image_not_found.jpg') }}" alt="{{ $c->product->products }}" class="w-16 h-16 object-cover rounded">
-                            </td>
-                            <!-- Product and Quantity column -->
-                            <td class="py-2 text-gray-700">
-                                <p class="font-medium">{{ $c->product->products }}</p>
-                                <div class="mt-1">
-                                    <input type="number" id="quantity-{{ $c->id }}" name="quantity[{{ $c->id }}]" value="{{ $c->quantity }}" class="w-16 px-2 py-1 border border-gray-300 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                </div>
-                            </td>
-                            <!-- Delete button column -->
-                            <td class="py-2 text-right">
-                                <button class="text-red-500 hover:text-red-700" type="button" onclick="removeFromCart({{ $c->id }})">
-                                    <i class="fa fa-trash" aria-hidden="true"></i>
-                                </button>
-                            </td>
-                        </tr>
+                            <tr class="border-b border-gray-200">
+                                <!-- Image column -->
+                                <td class="py-2 pr-4">
+                                    <img src="{{ $c->product->image != null ? $c->product->image : asset('image_not_found.jpg') }}" alt="{{ $c->product->products }}" class="w-16 h-16 object-cover rounded">
+                                </td>
+                                <!-- Product and Quantity column -->
+                                <td class="py-2 text-gray-700">
+                                    <p class="font-medium">{{ $c->product->products }}</p>
+                                    <div class="mt-1">
+                                        <input type="number" id="quantity-{{ $c->id }}" name="quantity[{{ $c->id }}]" value="{{ $c->quantity }}" class="w-16 px-2 py-1 border border-gray-300 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    </div>
+                                </td>
+                                <!-- Delete button column -->
+                                <td class="py-2 text-right">
+                                    <a href="javascript:void(0)" class="text-red-500 hover:text-red-700 delete-cart" data-url="{{ route('delete_cart', $c->id) }}">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                    </a>
+                                </td>
+                            </tr>
                         @endforeach
                     </tbody>
                 </table>
@@ -39,9 +39,33 @@
     @endif
 </div>
 
-<script>
-    function removeFromCart(id) {
-        // Add your remove logic here (AJAX request or form submission)
-        alert('Produk dengan ID ' + id + ' akan dihapus.');
-    }
-</script>
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $(document).on('click', '.delete-cart', function() {
+
+            var userURL = $(this).data('url');
+            var trObj = $(this);
+
+            if (confirm("Are you sure you want to delete this user?") == true) {
+                $.ajax({
+                    url: userURL,
+                    type: 'DELETE',
+                    dataType: 'json',
+                    success: function(data) {
+                        alert(data.success);
+                        trObj.parents("tr").remove();
+                        // location.reload();
+                    }
+                });
+            }
+
+        });
+
+    });
+    </script>

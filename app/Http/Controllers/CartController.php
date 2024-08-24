@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CartRequest;
 use App\Models\Cart;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 
 class CartController extends Controller
 {
@@ -33,8 +35,10 @@ class CartController extends Controller
                         ->with($cart ? 'success' : 'error', $message);
     }
 
-    public function destroy(Cart $cart)
+    public function destroy($id)
     {
-        //
+        $promo_produk = Cart::findOrFail($id);
+        $promo_produk->delete();
+        return response()->json(['success' => 'User Deleted Successfully!']);
     }
 }

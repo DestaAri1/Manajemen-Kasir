@@ -9,14 +9,14 @@
         @include('components.succes-error-notification')
         <div class="max-w-7xl flex mx-auto sm:px-6 lg:px-8">
             <!-- Scrollable div -->
-            <div id="my-scrollable-div" class="bg-white md:overflow-y-auto md:overflow-x-hidden shadow-sm sm:rounded-lg w-full md:w-[74.5%] md:max-h-[75vh] opacity-0">
+            <div id="my-scrollable-div" class="bg-white md:overflow-y-auto md:overflow-x-hidden shadow-sm sm:rounded-lg w-full lg:w-[74.5%] lg:max-h-[75vh] opacity-0">
                 <div class="p-6 text-gray-900">
                     @include('home.partials.promo-slider')
                     @include('home.partials.product_list')
                 </div>
             </div>
             <!-- Sidebar -->
-            <div class="bg-white shadow-sm sm:rounded-lg ml-2 w-[24.5%] max-h-[75vh] hidden md:block">
+            <div class="bg-white shadow-sm sm:rounded-lg ml-2 w-[24.5%] max-h-[75vh] hidden lg:block">
                 <div class="p-6 text-gray-900">
                     @include('home.partials.cart-list')
                 </div>

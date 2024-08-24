@@ -16,12 +16,10 @@ Route::fallback(function () {
     return view('errors.404');
 });
 
-Route::get('/search', [ProductController::class, 'search'])->name('search');
-
 Route::middleware('auth')->group(function () {
     Route::prefix('/home')->group(function () {
         Route::get('/', [HomeController::class, 'index'])->name('dashboard');
-        // Route::get('/search', [HomeController::class, 'search'])->name('search');
+        Route::get('/search', [HomeController::class, 'search'])->name('search');
     });
     Route::prefix('/product')->group(function () {
         Route::get('/', [ProductController::class, 'index'])->name('product');
