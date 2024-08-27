@@ -5,6 +5,10 @@
         </h2>
     </x-slot>
     <div class="py-2">
+        <div id="successPopup2" class="hidden bg-green-500 text-white px-4 py-2 rounded-md fixed top-24 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition duration-[5000ms]">
+            <span id="popupMessage" class="mr-2"></span>
+            <button id="closePopup2" class="ml-4 bg-white text-gray-800 px-2 rounded">X</button>
+        </div>
         @include('components.validation-error-notifications')
         @include('components.succes-error-notification')
         <div class="max-w-7xl flex mx-auto sm:px-6 lg:px-8">

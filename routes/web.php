@@ -3,6 +3,7 @@
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PromoController;
@@ -45,6 +46,11 @@ Route::middleware('auth')->group(function () {
     Route::prefix('/cart')->group(function () {
         Route::post('/', [CartController::class, 'store'])->name('add_cart');
         Route::delete('/{id}', [CartController::class, 'destroy'])->name('delete_cart');
+        Route::post('/update', [CartController::class, 'update'])->name('update_cart');
+    });
+    Route::prefix('/pembayaran')->group(function () {
+        Route::get('/', [PembayaranController::class, 'index'])->name('pembayaran');
+        Route::post('/{id}', [PembayaranController::class, 'store'])->name('pembayaran.store');
     });
 });
 

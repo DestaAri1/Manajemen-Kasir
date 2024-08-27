@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Product;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CartRequest extends FormRequest
 {
@@ -22,19 +24,25 @@ class CartRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'product_id' => 'required|integer',
-            'quantity' => 'required|integer|not_in:0'
+            'product_id' => 'integer',
+            'quantity' => 'integer|not_in:0',
+            'product' => 'array|not_in:0|min:1',
+            'product.*' => ['integer', Rule::exists('products', 'id')],
+            'quantity_'=> 'array|not_in:0|min:1',
+            'quantity_*' => 'integer|not_in:0',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'product_id.required' => 'Produk tidak boleh kosong',
             'product_id.integer' => 'Mana id produknya??',
-            'quantity.required' => 'Jumlah tidak boleh kosong',
             'quantity.integer' => 'Masukin jumlah ga niiii?',
-            'quantity.not_in' => 'Jangan 0 lah tololll'
+            'quantity.not_in' => 'Jangan 0 lah tololll',
+            'product.array' => 'Harus berupa array',
+            'product.not_in' => 'Jangan 0 lah tololll',
+            'product.min' => 'Jangan 0 blokkk',
+            'product.*.integer' => 'Kasih nilai lahhh',
         ];
     }
 }
