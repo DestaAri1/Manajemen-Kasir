@@ -12,6 +12,7 @@ class Cart extends Model
     protected $table = 'carts';
 
     protected $fillable = [
+        'promo_id',
         'product_id',
         'quantity',
         'user_id',
@@ -19,5 +20,9 @@ class Cart extends Model
 
     public function product() {
         return $this->belongsTo(Product::class, 'product_id');
+    }
+
+    public function promo() {
+        return $this->belongsTo(Product_promo::class, 'promo_id');
     }
 }

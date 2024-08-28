@@ -24,6 +24,7 @@ class CartRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'promo_id' => 'integer',
             'product_id' => 'integer',
             'quantity' => 'integer|not_in:0',
             'product' => 'array|not_in:0|min:1',
@@ -36,11 +37,12 @@ class CartRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'promo_id.integer' => 'Mana id produknya??',
             'product_id.integer' => 'Mana id produknya??',
             'quantity.integer' => 'Masukin jumlah ga niiii?',
-            'quantity.not_in' => 'Jangan 0 lah tololll',
+            'quantity.not_in' => 'Jangan 0 lah tololll 1',
             'product.array' => 'Harus berupa array',
-            'product.not_in' => 'Jangan 0 lah tololll',
+            'product.not_in' => 'Jangan 0 lah tololll 2',
             'product.min' => 'Jangan 0 blokkk',
             'product.*.integer' => 'Kasih nilai lahhh',
         ];

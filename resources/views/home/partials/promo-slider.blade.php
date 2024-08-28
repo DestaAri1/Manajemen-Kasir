@@ -30,9 +30,35 @@
                     {{ $p->type == 0 ? ('- Rp. ' . $p->value) : $p->value.('%') }}
                 </p>
             </div>
-            <div class="flex justify-end mt-12">
-                <small class="line-through mr-2">Rp. {{ formatRupiah($total_harga) }}</small>
-                <p class="text-xl font-bold mt-auto">Rp. {{ formatRupiah($harga_setelah_diskon) }}</p>
+            <div class="columns-3 gap-4">
+                @foreach($p->productPromos as $productPromo)
+                    <small class="block mb-2">{{ $productPromo->product->products }} {{ $productPromo->amount }}</small>
+                @endforeach
+            </div>
+            <div class="flex justify-between">
+                <div class="mt-4">
+                    <form action="{{ route('add_cart') }}" method="POST" class="flex justify-center items-center">
+                        @csrf
+                        <!-- Minus Button -->
+                        <button type="button" class="bg-red-500 text-white px-2 py-1 rounded-l hover:bg-red-600 transition-colors duration-200 minusButton2" data-id="{{ $p->id }}">-</button>
+
+                        <!-- Input -->
+                        <input type="hidden" name="promo_id" value="{{ $p->id }}">
+                        <input type="number" name="quantity" id="numberInput2{{ $p->id }}" class="number w-14 text-center border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none appearance-none py-1" value="0" />
+
+                        <!-- Plus Button -->
+                        <button type="button" class="bg-green-500 text-white px-2 py-1 rounded-r hover:bg-green-600 transition-colors duration-200 plusButton2" data-id="{{ $p->id }}">+</button>
+
+                        <!-- Cart Button -->
+                        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold ml-3 px-3 py-1 rounded transition-colors duration-200">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </button>
+                    </form>
+                </div>
+                <div>
+                    <small class="line-through mr-2">Rp. {{ formatRupiah($total_harga) }}</small>
+                    <p class="text-xl font-bold mt-auto">Rp. {{ formatRupiah($harga_setelah_diskon) }}</p>
+                </div>
             </div>
         </div>
         @endforeach
@@ -41,37 +67,50 @@
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
 <script>
-    var data = {{ count($promo) }}
-    var isMobile = window.matchMedia("(max-width: 768px)").matches;
-    var slidesPerViewValue = isMobile ? 1 : (data > 1 ? 2 : 1);
-    var spaceBetweenValue = isMobile ? 30 : (data > 1 ? 30 : 0)
+    document.addEventListener('DOMContentLoaded', function () {
+        var data = {{ count($promo) }};
 
-    // Fungsi untuk mengkloning slide pertama jika jumlah slide ganjil
-    function handleOddSlides(swiper) {
-        const slides = swiper.slides;
-        if (slides.length % 2 !== 0) {
-            const firstSlide = slides[0].cloneNode(true);
-            swiper.appendSlide(firstSlide);
-        }
-    }
-
-    var swiper = new Swiper('.swiper-container', {
-        slidesPerView: slidesPerViewValue,
-        spaceBetween: spaceBetweenValue,
-        loop: true,
-        autoplay: {
-            delay: 3000,
-            pauseOnMouseEnter: true
-        },
-        on: {
-            init: function () {
-            handleOddSlides(this);
+        // Mengatur loop hanya jika data > 1
+        var swiper = new Swiper('.swiper-container', {
+            slidesPerView: 1,
+            spaceBetween: 30,
+            loop: data > 1,
+            autoplay: {
+                delay: 3000,
+                pauseOnMouseEnter: true
             }
+        });
+
+        // Fungsi untuk memasang event listener ke tombol + dan -
+        function attachEventListeners2() {
+            const plusButtons = document.querySelectorAll('.plusButton2');
+            const minusButtons = document.querySelectorAll('.minusButton2');
+
+            plusButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    const numberInput = document.getElementById('numberInput2' + id);
+                    numberInput.value = parseInt(numberInput.value) + 1;
+                });
+            });
+
+            minusButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    const numberInput = document.getElementById('numberInput2' + id);
+
+                    // Cek apakah nilai lebih besar dari 0 sebelum dikurangi
+                    if (parseInt(numberInput.value) > 0) {
+                        numberInput.value = parseInt(numberInput.value) - 1;
+                    }
+                });
+            });
         }
+
+        // Panggil fungsi untuk memasang event listener
+        attachEventListeners2();
     });
 </script>
 @else
 <div class="flex justify-center">Tidak ada Promo</div>
 @endif
-
-

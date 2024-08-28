@@ -4,11 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CartRequest;
 use App\Models\Cart;
-use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Crypt;
-use PhpParser\Node\Stmt\Return_;
 
 class CartController extends Controller
 {
