@@ -8,13 +8,23 @@ use Illuminate\Support\Facades\Auth;
 
 class PembayaranController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    private $userId;
+    private $cart;
+
+    public function __construct()
+    {
+        $this->userId = Auth::id();
+        $this->cart = Cart::where('user_id', $this->userId)
+                            ->with(['product', 'promo' => function($query) {
+                                $query->whereNotNull('name');
+                            }])
+                            ->get();
+    }
+
     public function index(Request $request)
     {
-        $userId = Auth::id();
-        $cart = Cart::where('user_id', $userId)->get();
+        $cart = $this->cart;
+        // dd($cart);
         return view('pembayaran.index', compact('cart'));
     }
 

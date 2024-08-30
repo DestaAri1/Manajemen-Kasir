@@ -13,12 +13,12 @@
                                 <tr class="border-b border-gray-200">
                                     <!-- Image column -->
                                     <td class="py-2 pr-4">
-                                        <img src="{{ asset('image_not_found.jpg') }}" alt="{{ $c->promo->promo->name }}" class="w-16 h-16 object-cover rounded">
-                                        <input type="hidden" name="product[]" id="product[]" value="{{ $c->promo->id }}">
+                                        <img src="{{ asset('image_not_found.jpg') }}" alt="{{ $c->promo->name }}" class="w-16 h-16 object-cover rounded">
+                                        <input type="hidden" name="promo[]" id="promo[]" value="{{ $c->promo->id }}">
                                     </td>
                                     <!-- Product and Quantity column -->
                                     <td class="py-2 text-gray-700">
-                                        <p class="font-medium">{{ $c->promo->promo->name }}</p>
+                                        <p class="font-medium">{{ $c->promo->name }}</p>
                                         <div class="mt-1">
                                             <input type="number" id="quantity[]" name="quantity_[]" value="{{ $c->quantity }}" class="w-16 px-2 py-1 border border-gray-300 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-blue-500">
                                         </div>

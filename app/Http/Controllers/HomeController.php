@@ -10,18 +10,23 @@ use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    private $userId;
+
+    public function __construct()
+    {
+        $this->userId = Auth::id();
+    }
+
     public function index()
     {
-        $promo = Promo::where('user_id', Auth::user()->id)->with([
+        $promo = Promo::where('user_id', $this->userId)->with([
             'productPromos',
         ])->get();
-        $produk = Product::where('user_id', Auth::user()->id)->get();
-        $cart = Cart::where('user_id', Auth::user()->id)
-                ->with(['product'])
+        $produk = Product::where('user_id', $this->userId)->get();
+        $cart = Cart::where('user_id', $this->userId)
+                ->with(['product', 'promo'])
                 ->get();
+        // dd($cart);
         if (session()->has('scrollPosition')) {
             return view('home.index', ['scrollPosition' => session()->get('scrollPosition'), 'promo', 'produk', 'cart']);
         }

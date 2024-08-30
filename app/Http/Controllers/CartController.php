@@ -35,12 +35,15 @@ class CartController extends Controller
 
     public function update(CartRequest $request) {
         $validate = $request->validated();
+
+        // dd($validate);
         if ($validate) {
             $carts = Cart::where('user_id', $request->user()->id)
                 ->whereIn('product_id', $request->input('product'))
+                ->orWhereIn('promo_id', $request->input('promo'))
                 ->get();
             foreach ($carts as $key => $cart) {
-                $form = ['quantity' => $request->quantity_[$key],];
+                $form = ['quantity' => $request->quantity_[$key]];
                 $cart->update($form);
             }
         }

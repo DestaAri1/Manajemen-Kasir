@@ -23,6 +23,6 @@ class Cart extends Model
     }
 
     public function promo() {
-        return $this->belongsTo(Product_promo::class, 'promo_id');
+        return $this->belongsTo(Promo::class, 'promo_id');
     }
 }

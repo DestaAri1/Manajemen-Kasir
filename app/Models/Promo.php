@@ -21,4 +21,8 @@ class Promo extends Model
     public function productPromos() {
         return $this->hasMany(Product_promo::class, 'promo_id');
     }
+
+    public function cart() {
+        return $this->hasMany(Cart::class, 'promo_id');
+    }
 }
