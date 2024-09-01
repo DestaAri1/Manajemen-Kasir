@@ -12,6 +12,9 @@ class History extends Model
     protected $table = 'histories';
 
     protected $fillable = [
-        //
+        'product',
+        'promo',
+        'amount',
+        'price',
     ];
 }

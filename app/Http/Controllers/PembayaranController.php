@@ -15,16 +15,13 @@ class PembayaranController extends Controller
     {
         $this->userId = Auth::id();
         $this->cart = Cart::where('user_id', $this->userId)
-                            ->with(['product', 'promo' => function($query) {
-                                $query->whereNotNull('name');
-                            }])
+                            ->with(['product', 'promo'])
                             ->get();
     }
 
     public function index(Request $request)
     {
         $cart = $this->cart;
-        // dd($cart);
         return view('pembayaran.index', compact('cart'));
     }
 
@@ -41,7 +38,8 @@ class PembayaranController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $amount = str_replace(['Rp ', '.'], '', $request->input('amount'));
+        dd($amount);
     }
 
     /**

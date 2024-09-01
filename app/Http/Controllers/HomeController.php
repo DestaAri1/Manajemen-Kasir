@@ -22,7 +22,7 @@ class HomeController extends Controller
         $promo = Promo::where('user_id', $this->userId)->with([
             'productPromos',
         ])->get();
-        $produk = Product::where('user_id', $this->userId)->get();
+        $produk = Product::where('user_id', $this->userId)->paginate(8);
         $cart = Cart::where('user_id', $this->userId)
                 ->with(['product', 'promo'])
                 ->get();

@@ -36,12 +36,23 @@ class CartController extends Controller
     public function update(CartRequest $request) {
         $validate = $request->validated();
 
-        // dd($validate);
         if ($validate) {
+            // Ambil input promo dan product, pastikan array atau beri nilai default
+            $promoIds = $request->input('promo', []);
+            $productIds = $request->input('product', []);
+
+            // Periksa apakah promo atau product ada
             $carts = Cart::where('user_id', $request->user()->id)
-                ->whereIn('product_id', $request->input('product'))
-                ->orWhereIn('promo_id', $request->input('promo'))
+                ->where(function ($query) use ($promoIds, $productIds) {
+                    if (!empty($promoIds)) {
+                        $query->whereIn('promo_id', $promoIds);
+                    }
+                    if (!empty($productIds)) {
+                        $query->orWhereIn('product_id', $productIds);
+                    }
+                })
                 ->get();
+
             foreach ($carts as $key => $cart) {
                 $form = ['quantity' => $request->quantity_[$key]];
                 $cart->update($form);

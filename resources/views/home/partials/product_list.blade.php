@@ -33,17 +33,13 @@
                 <div class="pb-4">
                     <form action="{{ route('add_cart') }}" method="POST" class="flex justify-center items-center">
                         @csrf
-                        <!-- Minus Button -->
                         <button type="button" class="bg-red-500 text-white px-2 py-1 rounded-l hover:bg-red-600 transition-colors duration-200 minusButton" data-id="{{ $p->id }}">-</button>
 
-                        <!-- Input -->
                         <input type="hidden" name="product_id" value="{{ $p->id }}">
                         <input type="number" name="quantity" id="numberInput{{ $p->id }}" class="number w-14 text-center border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none appearance-none py-1" value="0" />
 
-                        <!-- Plus Button -->
                         <button type="button" class="bg-green-500 text-white px-2 py-1 rounded-r hover:bg-green-600 transition-colors duration-200 plusButton" data-id="{{ $p->id }}">+</button>
 
-                        <!-- Cart Button -->
                         <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold ml-3 px-3 py-1 rounded transition-colors duration-200">
                             <i class="fa-solid fa-cart-shopping"></i>
                         </button>
@@ -52,74 +48,131 @@
             </div>
             @endforeach
         </div>
+
+        <!-- Tambahkan Pagination Links di sini -->
+        <div class="mt-8">
+            {{ $produk->links() }}
+        </div>
     </div>
 </section>
 
+
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const searchInput = document.getElementById('searchInput');
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
 
-        // Panggil fungsi untuk memasang event listener awal
-        attachEventListeners();
+    // Panggil fungsi untuk memasang event listener awal
+    attachEventListeners();
 
-        searchInput.addEventListener('keyup', function() {
-            const query = this.value.trim(); // Hilangkan spasi kosong di depan/belakang query
+    searchInput.addEventListener('keyup', function() {
+        const query = this.value.trim(); // Hilangkan spasi kosong di depan/belakang query
 
-            // Jika input kosong, reload halaman untuk menampilkan semua produk
-            if (query === '') {
-                location.reload();
-                return;
+        // Jika input kosong, reload halaman untuk menampilkan semua produk
+        if (query === '') {
+            location.reload();
+            return;
+        }
+
+        // AJAX request
+        fetch(`/home/search?query=${query}`)
+        .then(response => response.json())
+        .then(data => {
+            let productContainer = document.querySelector('.product-grid');
+            productContainer.innerHTML = ''; // Kosongkan produk lama
+
+            if (data.length > 0) {
+                data.forEach(product => {
+                    productContainer.innerHTML += `
+                        <div class="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-lg overflow-hidden border border-gray-200">
+                            <a href="javascript:;" class="group">
+                                <div class="relative">
+                                    <img src="${product.image ? product.image : '{{ asset('image_not_found.jpg') }}'}" alt="Produk Image" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105">
+                                    <div class="absolute bottom-0 left-0 bg-gradient-to-t from-black to-transparent w-full p-4">
+                                        <h6 class="text-white text-xs leading-4">
+                                            ${product.products.length > 35 ? product.products.substring(0, 35) + ' ...' : product.products}
+                                        </h6>
+                                    </div>
+                                </div>
+                                <div class="p-4">
+                                    <h6 class="font-semibold text-sm text-gray-600">Stok: ${product.stock}</h6>
+                                    <h6 class="font-semibold text-lg text-indigo-600 mt-1">${formatRupiah(product.price)}</h6>
+                                </div>
+                            </a>
+                            <div class="pb-4">
+                                <form action="{{ route('add_cart') }}" method="POST" class="flex justify-center items-center">
+                                    @csrf
+                                    <button type="button" class="bg-red-500 text-white px-2 py-1 rounded-l hover:bg-red-600 transition-colors duration-200 minusButton" data-id="${product.id}">-</button>
+                                    <input type="hidden" name="product_id" value="${product.id}">
+                                    <input type="number" name="quantity" id="numberInput${product.id}" class="number w-14 text-center border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none appearance-none py-1" value="0" />
+                                    <button type="button" class="bg-green-500 text-white px-2 py-1 rounded-r hover:bg-green-600 transition-colors duration-200 plusButton" data-id="${product.id}">+</button>
+                                    <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold ml-3 px-3 py-1 rounded transition-colors duration-200">
+                                        <i class="fa-solid fa-cart-shopping"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>`;
+                });
+
+                // Pasang ulang event listener setelah produk diperbarui
+                attachEventListeners();
+            } else {
+                productContainer.innerHTML = `<p class="text-center text-gray-500 col-span-4">Tidak ada produk ditemukan</p>`;
             }
+        })
+        .catch(error => console.error('Error:', error));
+    });
 
-            // AJAX request
-            fetch(`/home/search?query=${query}`)
+    // Event listener untuk link pagination
+    document.addEventListener('click', function(event) {
+        if (event.target.tagName === 'A' && event.target.closest('.pagination')) {
+            event.preventDefault();
+            let url = event.target.getAttribute('href');
+
+            fetch(url)
             .then(response => response.json())
             .then(data => {
                 let productContainer = document.querySelector('.product-grid');
                 productContainer.innerHTML = ''; // Kosongkan produk lama
 
-                if (data.length > 0) {
-                    data.forEach(product => {
-                        productContainer.innerHTML += `
-                            <div class="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-lg overflow-hidden border border-gray-200">
-                                <a href="javascript:;" class="group">
-                                    <div class="relative">
-                                        <img src="${product.image ? product.image : '{{ asset('image_not_found.jpg') }}'}" alt="Produk Image" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105">
-                                        <div class="absolute bottom-0 left-0 bg-gradient-to-t from-black to-transparent w-full p-4">
-                                            <h6 class="text-white text-xs leading-4">
-                                                ${product.products.length > 35 ? product.products.substring(0, 35) + ' ...' : product.products}
-                                            </h6>
-                                        </div>
+                data.data.forEach(product => {
+                    productContainer.innerHTML += `
+                        <div class="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-lg overflow-hidden border border-gray-200">
+                            <a href="javascript:;" class="group">
+                                <div class="relative">
+                                    <img src="${product.image ? product.image : '{{ asset('image_not_found.jpg') }}'}" alt="Produk Image" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105">
+                                    <div class="absolute bottom-0 left-0 bg-gradient-to-t from-black to-transparent w-full p-4">
+                                        <h6 class="text-white text-xs leading-4">
+                                            ${product.products.length > 35 ? product.products.substring(0, 35) + ' ...' : product.products}
+                                        </h6>
                                     </div>
-                                    <div class="p-4">
-                                        <h6 class="font-semibold text-sm text-gray-600">Stok: ${product.stock}</h6>
-                                        <h6 class="font-semibold text-lg text-indigo-600 mt-1">${formatRupiah(product.price)}</h6>
-                                    </div>
-                                </a>
-                                <div class="pb-4">
-                                    <form action="{{ route('add_cart') }}" method="POST" class="flex justify-center items-center">
-                                        @csrf
-                                        <button type="button" class="bg-red-500 text-white px-2 py-1 rounded-l hover:bg-red-600 transition-colors duration-200 minusButton" data-id="${product.id}">-</button>
-                                        <input type="hidden" name="product_id" value="${product.id}">
-                                        <input type="number" name="quantity" id="numberInput${product.id}" class="number w-14 text-center border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none appearance-none py-1" value="0" />
-                                        <button type="button" class="bg-green-500 text-white px-2 py-1 rounded-r hover:bg-green-600 transition-colors duration-200 plusButton" data-id="${product.id}">+</button>
-                                        <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold ml-3 px-3 py-1 rounded transition-colors duration-200">
-                                            <i class="fa-solid fa-cart-shopping"></i>
-                                        </button>
-                                    </form>
                                 </div>
-                            </div>`;
-                    });
+                                <div class="p-4">
+                                    <h6 class="font-semibold text-sm text-gray-600">Stok: ${product.stock}</h6>
+                                    <h6 class="font-semibold text-lg text-indigo-600 mt-1">${formatRupiah(product.price)}</h6>
+                                </div>
+                            </a>
+                            <div class="pb-4">
+                                <form action="{{ route('add_cart') }}" method="POST" class="flex justify-center items-center">
+                                    @csrf
+                                    <button type="button" class="bg-red-500 text-white px-2 py-1 rounded-l hover:bg-red-600 transition-colors duration-200 minusButton" data-id="${product.id}">-</button>
+                                    <input type="hidden" name="product_id" value="${product.id}">
+                                    <input type="number" name="quantity" id="numberInput${product.id}" class="number w-14 text-center border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none appearance-none py-1" value="0" />
+                                    <button type="button" class="bg-green-500 text-white px-2 py-1 rounded-r hover:bg-green-600 transition-colors duration-200 plusButton" data-id="${product.id}">+</button>
+                                    <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold ml-3 px-3 py-1 rounded transition-colors duration-200">
+                                        <i class="fa-solid fa-cart-shopping"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>`;
+                });
 
-                    // Pasang ulang event listener setelah produk diperbarui
-                    attachEventListeners();
-                } else {
-                    productContainer.innerHTML = `<p class="text-center text-gray-500 col-span-4">Tidak ada produk ditemukan</p>`;
-                }
+                // Pasang ulang event listener setelah produk diperbarui
+                attachEventListeners();
             })
             .catch(error => console.error('Error:', error));
-        });
+        }
     });
+});
 
     // Fungsi untuk memasang event listener ke tombol + dan -
     function attachEventListeners() {

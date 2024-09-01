@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('histories', function (Blueprint $table) {
             $table->id();
+            $table->string('product')->nullable();
+            $table->string('promo')->nullable();
+            $table->integer('amount');
+            $table->float('price');
             $table->timestamps();
         });
     }
