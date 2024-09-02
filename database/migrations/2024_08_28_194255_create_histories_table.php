@@ -15,8 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('product')->nullable();
             $table->string('promo')->nullable();
+            $table->integer('type'); //in out adjust
             $table->integer('amount');
             $table->float('price');
+            $table->float('discount')->nullable();
             $table->timestamps();
         });
     }

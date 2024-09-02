@@ -88,12 +88,19 @@
             <td class="w-[75%] text-right">Total Harga</td>
             <td class="w-[5%] text-center">:</td>
             <td>Rp. {{ formatRupiah($total_harga_semua) }}</td>
+            <input type="hidden" name="total_price" value="{{ $total_harga_semua }}">
+            <input type="hidden" name="total_discount" value="{{ $total_diskon }}">
         </tr>
         <tr>
             <td class="w-[75%] text-right">Jumlah Bayar</td>
             <td class="w-[5%] text-center">:</td>
             <td><input class="py-0" type="text" id="amount" name="amount" onkeyup="FormatRupiah(this)"></td>
         </tr>
+        @if ($message = Session::get('amount_error'))
+        <tr>
+            <td colspan="3" class="text-right text-red-700">{{ $message }}</td>
+        </tr>
+        @endif
     </tbody>
 </table>
 <script>

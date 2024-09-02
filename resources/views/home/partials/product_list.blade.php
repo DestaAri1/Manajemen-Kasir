@@ -13,6 +13,9 @@
                 </div>
             </div>
         </div>
+        @if ($produk->count() == 0)
+            <div class="flex justify-center">Tidak ada produk</div>
+        @else
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6 product-grid">
             @foreach ($produk as $p)
             <div class="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-lg overflow-hidden border border-gray-200">
@@ -48,6 +51,7 @@
             </div>
             @endforeach
         </div>
+        @endif
 
         <!-- Tambahkan Pagination Links di sini -->
         <div class="mt-8">

@@ -1,5 +1,5 @@
 <div class="p-1 hola">
-    <p class="font-semibold text-lg text-gray-800">{{ strtoupper('Kerangjang Belanja') }}</p>
+    <p class="font-semibold text-center text-lg text-gray-800">{{ strtoupper('Kerangjang Belanja') }}</p>
     @if ($cart->count() == 0)
         <p class="text-center text-gray-500">Tidak ada data</p>
     @else
