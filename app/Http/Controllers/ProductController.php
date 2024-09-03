@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\History;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -66,6 +67,16 @@ class ProductController extends Controller
 
         $produk = Product::create($form_data);
 
+        $form_data2 = [
+            'product' => $produk->products,
+            'type' => 0,
+            'amount' => $request->stock,
+            'price' => $produk->price,
+            'user_id' => $request->user()->id,
+        ];
+
+        History::create($form_data2);
+
         if ($produk) {
             return redirect()->back()->with('success', 'Produk berhasil disimpan');
         } else {
@@ -119,6 +130,16 @@ class ProductController extends Controller
             ];
 
             $update_produk = $produk->update($form_data);
+
+            $form_data2 = [
+                'product' => $produk->products,
+                'type' => 2,
+                'amount' => $request->stock,
+                'price' => $produk->price,
+                'user_id' => $request->user()->id,
+            ];
+
+            History::create($form_data2);
 
             if ($update_produk) {
                 return redirect()->route('product')->with('success', 'Data berhasil diupdate');

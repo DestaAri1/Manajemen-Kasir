@@ -15,6 +15,9 @@ class History extends Model
         'product',
         'promo',
         'amount',
+        'type',
         'price',
+        'discount',
+        'user_id',
     ];
 }

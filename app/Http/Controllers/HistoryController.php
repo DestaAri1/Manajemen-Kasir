@@ -2,16 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\History;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HistoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    private $userId;
+    private $history;
+    public function __construct()
+    {
+        $this->userId = Auth::id();
+        $this->history = History::where('user_id', $this->userId)
+                                  ->orderBy('id', 'desc')
+                                  ->paginate(6);
+    }
     public function index()
     {
-        return view('history.index');
+        $history = $this->history;
+        return view('history.index', compact('history'));
     }
 
     /**

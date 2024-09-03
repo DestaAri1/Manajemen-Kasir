@@ -24,7 +24,11 @@ class PembayaranController extends Controller
     public function index(Request $request)
     {
         $cart = $this->cart;
-        return view('pembayaran.index', compact('cart'));
+        if ($cart->count() == null) {
+            return redirect()->route('dashboard');
+        } else {
+            return view('pembayaran.index', compact('cart'));
+        }
     }
 
     public function store(Request $request)
@@ -35,6 +39,8 @@ class PembayaranController extends Controller
         $total_harga = $request->total_price;
         $diskon = $request->total_discount;
         $selisih = $total_harga - $amount;
+
+        $kembalian = $amount - $total_harga;
 
         if ($total_harga > $amount) {
             return redirect()->back()->with('amount_error', "Uang yang anda bayarkan kurang Rp. " . formatRupiah($selisih));
@@ -49,11 +55,19 @@ class PembayaranController extends Controller
 
             if ($promo && $promo->productPromos->isNotEmpty()) {
                 $total_keranjang += $promo->productPromos->sum('amount');
+                foreach ($promo->productPromos as $productPromo) {
+                    $total_barang = $productPromo->amount * $data->quantity;
+
+                    if ($productPromo->product->stock - $total_barang < 0) {
+                        return redirect()->back()->with('error', 'Stok produk ' . $productPromo->product->products . ' tidak mencukupi.');
+                    }
+                }
+            } else {
+                if ($product && $product->stock - $data->quantity < 0) {
+                    return redirect()->back()->with('error', 'Stok produk ' . $product->products . ' tidak mencukupi.');
+                }
             }
         }
-
-        $produk = Product::where('user_id', $this->userId)
-                           ->whereIn('id');
 
         // Process each cart item
         foreach ($cart as $data) {
@@ -67,26 +81,37 @@ class PembayaranController extends Controller
                     $diskon_per_produk = number_format(floor($diskon / $jumlah_total_barang), 1, '.', '');
                     $harga_produk = $productPromo->product->price - $diskon_per_produk;
 
+                    $product = $productPromo->product;
+
+                    $produk_sekarang = $product->stock - $total_barang;
+
                     // Save data to database
-                    // History::create([
-                    //     'product' => $productPromo->product->products,
-                    //     'promo' => $promo->name,
-                    //     'amount' => $total_barang,
-                    //     'price' => $harga_produk,
-                    // ]);
-                    $id = $productPromo->product->id;
+                    History::create([
+                        'product' => $productPromo->product->products,
+                        'promo' => $promo->name,
+                        'amount' => $total_barang,
+                        'price' => $harga_produk,
+                    ]);
+
+                    $product->update(['stock' => $produk_sekarang]);
                 }
             } else {
                 if ($product) {
-                    // History::create([
-                    //     'product' => $product->products,
-                    //     'promo' => null,
-                    //     'amount' => $data->quantity,
-                    //     'price' => $product->price,
-                    // ]);
+                    $total_produk = $product->stock - $data->quantity;
+                    History::create([
+                        'product' => $product->products,
+                        'promo' => null,
+                        'amount' => $data->quantity,
+                        'price' => $product->price,
+                    ]);
+
+                    $product->update(['stock' => $total_produk]);
                 }
             }
+            $data->delete();
         }
+
+        return redirect()->route('dashboard')->with('success', 'Pembayaran berhasil, kembalian anda Rp. '.formatRupiah($kembalian));
     }
 
 }

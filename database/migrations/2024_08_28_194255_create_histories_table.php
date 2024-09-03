@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('amount');
             $table->float('price');
             $table->float('discount')->nullable();
+            $table->unsignedBigInteger('user_id');
             $table->timestamps();
         });
     }
