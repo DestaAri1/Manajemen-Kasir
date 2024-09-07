@@ -9,18 +9,21 @@ use Illuminate\Support\Facades\Auth;
 class HistoryController extends Controller
 {
     private $userId;
+    private $historyQuery;
     private $history;
+
     public function __construct()
     {
         $this->userId = Auth::id();
-        $this->history = History::where('user_id', $this->userId)
-                                  ->orderBy('id', 'desc')
-                                  ->paginate(6);
+        $this->historyQuery = History::where('user_id', $this->userId)
+                                  ->orderBy('id', 'desc');
+        $this->history = $this->historyQuery->paginate(6);
     }
     public function index()
     {
         $history = $this->history;
-        return view('history.index', compact('history'));
+        $income = $this->historyQuery->where('type', '=', 3)->paginate(6);
+        return view('history.index', compact('history', 'income'));
     }
 
     /**

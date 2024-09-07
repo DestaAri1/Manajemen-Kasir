@@ -88,9 +88,11 @@ class PembayaranController extends Controller
                     // Save data to database
                     History::create([
                         'product' => $productPromo->product->products,
+                        'type' => 3,
                         'promo' => $promo->name,
                         'amount' => $total_barang,
                         'price' => $harga_produk,
+                        'user_id'=>$this->userId
                     ]);
 
                     $product->update(['stock' => $produk_sekarang]);
@@ -100,9 +102,11 @@ class PembayaranController extends Controller
                     $total_produk = $product->stock - $data->quantity;
                     History::create([
                         'product' => $product->products,
+                        'type' => 3,
                         'promo' => null,
                         'amount' => $data->quantity,
                         'price' => $product->price,
+                        'user_id'=>$this->userId
                     ]);
 
                     $product->update(['stock' => $total_produk]);

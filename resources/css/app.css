@@ -18,3 +18,12 @@ input[type="number"].number {
     -moz-appearance: textfield;
     appearance: textfield;
 }
+
+.section {
+    display: none;
+}
+
+.on {
+    background-color: #4b5563; /* Tambahkan warna untuk tombol yang aktif */
+    color: white;
+}
